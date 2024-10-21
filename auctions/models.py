@@ -3,7 +3,7 @@ from django.db import models
 
 # inherits from django's abstract user
 class User(AbstractUser):
-    pass
+    watchlist = models.ManyToManyField('AuctionListing', blank=True, related_name="watchlisted_by")
 
 
 class Category(models.Model):
