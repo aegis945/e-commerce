@@ -30,6 +30,9 @@ class AuctionListing(models.Model):
 
     def __str__(self) -> str:
         return self.item_name
+    
+    class Meta:
+        ordering = ['item_name']
 
 
 class Bid(models.Model):

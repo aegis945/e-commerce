@@ -3,11 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from .forms import AuctionListingForm
-from .models import User
+from .models import AuctionListing, User
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = AuctionListing.objects.filter(is_active=True)
+    return render(request, "auctions/index.html", {
+        "listings": listings
+    })
 
 
 def login_view(request):
