@@ -14,6 +14,7 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ['category_name']
 
 
 class AuctionListing(models.Model):

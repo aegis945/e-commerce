@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-
+from .forms import AuctionListingForm
 from .models import User
 
 
@@ -59,3 +60,27 @@ def register(request):
         return redirect("auctions:index")
     else:
         return render(request, "auctions/register.html")
+    
+def watchlist(request):
+    pass
+
+def categories(request):
+    pass
+
+@login_required(login_url="auctions:login")
+def create_listing(request):
+    if request.method == "POST":
+        form = AuctionListingForm(request.POST)
+        if form.is_valid():
+            listing = form.save(commit=False)
+            listing.owner = request.user
+            listing.current_bid = listing.starting_bid
+            listing.save()
+            return redirect("auctions:index")
+    else:
+        form = AuctionListingForm()
+
+    return render(request, "auctions/create_listing.html", {
+        "form": form
+    })
+
