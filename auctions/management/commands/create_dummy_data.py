@@ -10,7 +10,7 @@ class Command(BaseCommand):
         response = requests.get('https://fakestoreapi.com/products?limit=10')
         products = response.json()
 
-        categories = {product['category'] for product in products}
+        categories = {product['category'].capitalize() for product in products}
         for category in categories:
             Category.objects.get_or_create(category_name=category)
 
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         owner = User.objects.get(username='artiom.lek')
 
         for product in products:
-            category = Category.objects.get(category_name=product['category'])
+            category = Category.objects.get(category_name=product['category'].capitalize())
             AuctionListing.objects.create(
                 item_name=product['title'],
                 description=product['description'],
