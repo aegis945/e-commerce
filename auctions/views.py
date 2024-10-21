@@ -64,8 +64,23 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
     
+@login_required
 def watchlist(request):
-    pass
+    listings = request.user.watchlist.all()
+    return render(request, "auctions/watchlist.html", {
+        "listings": listings
+    })
+
+@login_required
+def toggle_watchlist(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+
+    if listing in request.user.watchlist.all():
+        request.user.watchlist.remove(listing)
+    else:
+        request.user.watchlist.add(listing)
+
+    return redirect("auctions:listing_page", listing_id=listing_id)
 
 def categories(request):
     pass
@@ -87,3 +102,8 @@ def create_listing(request):
         "form": form
     })
 
+def listing_page(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    return render(request, "auctions/listing_page.html",{
+        "listing": listing,
+    })

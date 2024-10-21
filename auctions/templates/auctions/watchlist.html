@@ -1,7 +1,9 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}My Watchlist{% endblock %}
+
 {% block body %}
-    <h2 class="my-4">Active Listings</h2>
+    <h2 class="my-4">My Watchlist</h2>
 
     <div class="row">
         {% if listings %}
@@ -9,9 +11,9 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         {% if listing.image_url %}
-                        <a href="{% url 'auctions:listing_page' listing.id %}">
-                            <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.item_name }}" style="height: 200px; object-fit: scale-down;">
-                        </a>
+                            <a href="{% url 'auctions:listing_page' listing.id %}">
+                                <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.item_name }}" style="height: 200px; object-fit: scale-down;">
+                            </a>
                         {% endif %}
                         <div class="card-body d-flex flex-column"> 
                             <h5 class="card-title">{{ listing.item_name }}</h5>
@@ -20,14 +22,14 @@
                             <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
                             <div class="mt-auto d-flex justify-content-between align-items-center">
                                 <a href="{% url 'auctions:listing_page' listing.id %}" class="btn btn-primary">View Listing</a>
-                                <p class="card-text text-secondary">Created {{ listing.creation_date }}</p>
+                                <p class="card-text text-secondary">Created: {{ listing.creation_date }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         {% else %}
-            <h4 class="mx-3 my-2">No active listings available.</h4>
+            <h4 class="mx-3 my-2">Your watchlist is empty.</h4>
         {% endif %}
     </div>
 {% endblock %}
