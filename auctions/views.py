@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from .forms import AuctionListingForm
-from .models import AuctionListing, User
+from .models import AuctionListing, Category, User
 
 
 def index(request):
@@ -83,7 +83,18 @@ def toggle_watchlist(request, listing_id):
     return redirect("auctions:listing_page", listing_id=listing_id)
 
 def categories(request):
-    pass
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+def category_listings(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    listings = AuctionListing.objects.filter(category=category, is_active=True)
+    return render(request, "auctions/category_listings.html", {
+        "category": category,
+        "listings": listings
+    })
 
 @login_required(login_url="auctions:login")
 def create_listing(request):
