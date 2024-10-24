@@ -69,12 +69,17 @@
                     {% endif %}
                 {% endif %}
 
-                {% if user.is_authenticated and user == listing.owner and listing.is_active %}
-                    <div class="mt-4">
-                        <form action="{% url 'auctions:close_auction' listing.id %}" method="post">
+                {% if user.is_authenticated and user == listing.owner %}
+                    <div class="d-flex mt-4">
+                        <form action="{% url 'auctions:close_auction' listing.id %}" method="post" class="mr-2">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Close Auction</button>
-                    </form>
+                        </form>
+
+                        <form action="{% url 'auctions:delete_listing' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this listing?');">Delete Listing</button>
+                        </form>
                     </div>
                 {% endif %}
 

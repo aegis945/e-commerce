@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
+from django.http import HttpResponseForbidden
 from .forms import AuctionListingForm, CommentForm
 from .models import AuctionListing, Bid, Category, Comment, User
 from decimal import Decimal
@@ -175,6 +176,17 @@ def close_auction(request, listing_id):
         listing.save()
 
     return redirect("auctions:listing_page", listing_id=listing_id)
+
+@login_required
+def delete_listing(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+
+    if request.user == listing.owner:
+        listing.delete()
+        return redirect("auctions:index")
+    else:
+        return HttpResponseForbidden("You are not allowed to delete listings that aren't yours.")
+    
 
 @login_required
 def won_listings(request):
