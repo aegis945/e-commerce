@@ -1,5 +1,5 @@
 from django import forms
-from .models import AuctionListing, Category
+from .models import AuctionListing, Comment
 
 class AuctionListingForm(forms.ModelForm):
     class Meta:
@@ -34,5 +34,19 @@ class AuctionListingForm(forms.ModelForm):
             "category": "Category (optional)",
             "image_url": "Image URL (optional)",
             "starting_bid": "Starting Bid",
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["comment_text"]
+        widgets = {
+            "comment_text": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 3,
+                "placeholder": "Add your comment...",
+                "maxlength": "250"
+            })
         }
         

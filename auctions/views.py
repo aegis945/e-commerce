@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
-from .forms import AuctionListingForm
-from .models import AuctionListing, Bid, Category, User
+from .forms import AuctionListingForm, CommentForm
+from .models import AuctionListing, Bid, Category, Comment, User
 from decimal import Decimal
 
 
@@ -117,8 +117,23 @@ def create_listing(request):
 
 def listing_page(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
-    return render(request, "auctions/listing_page.html",{
+    comments = listing.comments.all()
+    form = CommentForm()
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)  # Bind the form with request data
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.auction_listing = listing
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "Comment added successfully!")
+            return redirect("auctions:listing_page", listing_id=listing_id)
+        
+    return render(request, "auctions/listing_page.html", {
         "listing": listing,
+        "comments": comments,
+        "form": form
     })
 
 @login_required(login_url="auctions:login")

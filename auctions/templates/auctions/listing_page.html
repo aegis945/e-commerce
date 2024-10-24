@@ -77,7 +77,36 @@
                     {% endif %}
                     </div>
                 {% endif %}
-            </div>
+
+                <div class="mt-5">
+                    <h3>Comments:</h3>
+                    <div class="comments">
+                        {% for comment in listing.comments.all %}
+                            <div class="comment m-1 mt-3">
+                                <strong>{{ comment.user.username }}</strong> ({{ comment.timestamp|date:"Y-m-d H:i" }}):
+                                <p>{{ comment.comment_text }}</p>
+                            </div>
+                        {% empty %}
+                            <p>Be the first to leave a comment!</p>
+                        {% endfor %}
+                    </div>
+                
+                    {% if user.is_authenticated %}
+                        <form action="" method="post" class="mt-4">
+                            {% csrf_token %}
+                            {{ form.comment_text }}
+                            <button type="submit" class="btn btn-primary mt-3">Submit Comment</button>
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.errors.comment_text.0 }}
+                                </div>
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <p>Please <a href="{% url 'auctions:login' %}">login</a> to leave a comment.</p>
+                    {% endif %}
+                </div>
+                
         </div>
     </div>
 {% endblock %}
