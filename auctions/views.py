@@ -117,6 +117,7 @@ def create_listing(request):
 
 def listing_page(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
+    bids = listing.bids.all()
     comments = listing.comments.all()
     form = CommentForm()
 
@@ -133,7 +134,8 @@ def listing_page(request, listing_id):
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
         "comments": comments,
-        "form": form
+        "form": form,
+        "bids": bids
     })
 
 @login_required(login_url="auctions:login")

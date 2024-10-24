@@ -15,7 +15,6 @@
             <div class="col-md-6">
                 <h2 class="card-title mb-4">{{ listing.item_name }}</h2>
                 <p class="card-text"><strong>Description:</strong> {{ listing.description }}</p>
-                <p class="card-text"><strong>Current Maximum Bid:</strong> {{ listing.current_bid }}€ {% if listing.winner != listing.owner %} {% if listing.winner %} by {{ listing.winner }} {% endif %} {% endif %}</p>
                 <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
                 <p class="card-text"><strong>Created:</strong> {{ listing.creation_date }}</p>
                 <p class="card-text"><strong>Posted By User:</strong> {{ listing.owner }}</p>
@@ -33,6 +32,16 @@
                     </form>
                 {% endif %}
                 
+                <h2 class="mt-4">Bids</h2>
+                <p class="card-text"><strong>Current Maximum Bid:</strong> {{ listing.current_bid }}€ {% if listing.winner != listing.owner %} {% if listing.winner %} by <strong>{{ listing.winner }}</strong> {% endif %} {% endif %}</p>
+                <ul>
+                    {% for bid in bids %}
+                        <li>{{ bid.timestamp }} - User: {{ bid.user.username }} - Bid: {{ bid.bid_amount }}€</li>
+                    {% empty %}
+                        <li>No bids placed yet.</li>
+                    {% endfor %}
+                </ul>
+
                 {% if user.is_authenticated and user != listing.owner and listing.is_active %}
                     <div class="mt-4">
                         <form action="{% url 'auctions:bid_on_listing' listing.id %}" method="post">
@@ -42,7 +51,7 @@
                                 <div class="input-group">
                                     <input type="number" step="0.01" name="bid_amount" class="form-control" required placeholder="Enter your bid amount" value="{{ listing.current_bid }}">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Place Bid</button>
+                                        <button type="submit" class="btn btn-primary" {% if user == listing.winner %}disabled{% endif %}>Place Bid</button>
                                     </div>
                                 </div>
                             </div>
