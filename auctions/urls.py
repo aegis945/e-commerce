@@ -16,5 +16,6 @@ urlpatterns = [
     path("create/", views.create_listing, name="create_listing"),
     path("listing/<int:listing_id>/", views.listing_page, name="listing_page"),
     path("listing/<int:listing_id>/bid/", views.bid_on_listing, name="bid_on_listing"),
-    path("listing/<int:listing_id>/close/", views.close_auction, name="close_auction")
+    path("listing/<int:listing_id>/close/", views.close_auction, name="close_auction"),
+    path("won-listings/", views.won_listings, name="won_listings")
 ]

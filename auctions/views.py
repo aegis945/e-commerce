@@ -92,7 +92,7 @@ def categories(request):
 
 def category_listings(request, category_id):
     category = Category.objects.get(pk=category_id)
-    listings = AuctionListing.objects.filter(category=category)
+    listings = AuctionListing.objects.filter(category=category, is_active=True)
     return render(request, "auctions/category_listings.html", {
         "category": category,
         "listings": listings
@@ -158,3 +158,10 @@ def close_auction(request, listing_id):
         listing.save()
 
     return redirect("auctions:listing_page", listing_id=listing_id)
+
+@login_required
+def won_listings(request):
+    listings = AuctionListing.objects.filter(winner=request.user, is_active=False)
+    return render(request, "auctions/won_listings.html", {
+        "listings": listings
+    })

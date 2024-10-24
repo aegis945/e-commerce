@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Won Listings{% endblock %}
+
+{% block body %}
+<h2 class="my-4">Won Listings</h2>
+
+<div class="row">
+    {% if listings %}
+        {% for listing in listings %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if listing.image_url %}
+                        <a href="{% url 'auctions:listing_page' listing.id %}">
+                            <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.item_name }}" style="height: 200px; object-fit: scale-down;">
+                        </a>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ listing.item_name }}</h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p class="card-text"><strong>Final Bid:</strong> {{ listing.current_bid }}€</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3 class="mx-3 my-2">No listings won yet.</h3>
+    {% endif %}
+</div>
+{% endblock %}
