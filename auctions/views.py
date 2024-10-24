@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.messages import get_messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -27,6 +28,11 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+
+            storage = get_messages(request)
+            for _ in storage:
+                pass
+            
             return redirect("auctions:index")
         else:
             return render(request, "auctions/login.html", {
