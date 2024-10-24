@@ -43,6 +43,8 @@ class Bid(models.Model):
     bid_amount = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return f"User {self.user} has made a bid of {self.bid_amount} on the item {self.auction_listing} at {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
 
 class Comment(models.Model):
     auction_listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="comments")
@@ -50,3 +52,5 @@ class Comment(models.Model):
     comment_text = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return f"Comment by {self.user} on '{self.auction_listing}' at {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
