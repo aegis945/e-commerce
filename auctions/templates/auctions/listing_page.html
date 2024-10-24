@@ -15,7 +15,7 @@
             <div class="col-md-6">
                 <h2 class="card-title mb-4">{{ listing.item_name }}</h2>
                 <p class="card-text"><strong>Description:</strong> {{ listing.description }}</p>
-                <p class="card-text"><strong>Current Maximum Bid:</strong> {{ listing.current_bid }}€ {% if listing.winner != listing.owner %} by {{ listing.winner }} {% endif %}</p>
+                <p class="card-text"><strong>Current Maximum Bid:</strong> {{ listing.current_bid }}€ {% if listing.winner != listing.owner %} {% if listing.winner %} by {{ listing.winner }} {% endif %} {% endif %}</p>
                 <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
                 <p class="card-text"><strong>Created:</strong> {{ listing.creation_date }}</p>
                 <p class="card-text"><strong>Posted By User:</strong> {{ listing.owner }}</p>
