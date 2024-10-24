@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from .forms import AuctionListingForm
-from .models import AuctionListing, Category, User
+from .models import AuctionListing, Bid, Category, User
+from decimal import Decimal
 
 
 def index(request):
@@ -90,7 +92,7 @@ def categories(request):
 
 def category_listings(request, category_id):
     category = Category.objects.get(pk=category_id)
-    listings = AuctionListing.objects.filter(category=category, is_active=True)
+    listings = AuctionListing.objects.filter(category=category)
     return render(request, "auctions/category_listings.html", {
         "category": category,
         "listings": listings
@@ -118,3 +120,41 @@ def listing_page(request, listing_id):
     return render(request, "auctions/listing_page.html",{
         "listing": listing,
     })
+
+@login_required(login_url="auctions:login")
+def bid_on_listing(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    message = ""
+
+    if request.method == "POST":
+        bid_amount = request.POST.get("bid_amount")
+
+        if listing.is_active:
+            if Decimal(bid_amount) >= listing.starting_bid and listing.current_bid is None or Decimal(bid_amount) > listing.current_bid:
+                Bid.objects.create(auction_listing=listing, user=request.user, bid_amount=bid_amount)
+
+                listing.current_bid = bid_amount
+                listing.winner = request.user
+                listing.save()
+            
+                messages.success(request, "You have successfully placed your bid!")
+                return redirect("auctions:listing_page", listing_id=listing_id)
+            else:
+                message = f"Bid must be greater than the current highest bid {listing.current_bid}"
+        else:
+            message = "This auction has already closed."
+
+    return render(request, "auctions/listing_page.html", {
+        "listing": listing, 
+        "message": message
+    })
+
+@login_required(login_url="auctions:login")
+def close_auction(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    
+    if request.user == listing.owner and listing.is_active:
+        listing.is_active = False
+        listing.save()
+
+    return redirect("auctions:listing_page", listing_id=listing_id)

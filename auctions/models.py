@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from decimal import Decimal
 
 # inherits from django's abstract user
 class User(AbstractUser):
@@ -18,13 +19,14 @@ class Category(models.Model):
 
 
 class AuctionListing(models.Model):
-    item_name = models.CharField(max_length=50)
+    item_name = models.CharField(max_length=100)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
     current_bid = models.DecimalField(max_digits=10, decimal_places=2)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="won_listings")
     creation_date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
 
