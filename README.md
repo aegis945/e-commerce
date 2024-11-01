@@ -45,12 +45,17 @@ venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
-5. **Run the following to create dummy data**:
+5. **Set Up Environment Variables: Create a .env file in the project root directory and define your environment variables**:
+```bash
+SECRET_KEY=your_secret_key
+DEBUG=True
+```
+6. **Run the following to create dummy data**:
 ```bash
 python manage.py create_dummy_data
 ```
-6. **Run dev server**:
+7. **Run dev server**:
 ```bash
 python manage.py runserver
 ```
-7. **Open your web browser and go to http://127.0.0.1:8000**
+8. **Open your web browser and go to http://127.0.0.1:8000**
